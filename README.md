@@ -87,7 +87,7 @@ Users can add, edit, delete, and track tasks, with data persisted in the browser
 - The task appears below in a list
 - Use the edit button to modify a task
 - Use the delete button to remove a task
-- Tasks persist in localStorage even after refreshing
+- Tasks persist in MySQL
 
 ---
 
