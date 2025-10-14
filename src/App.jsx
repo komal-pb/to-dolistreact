@@ -1,59 +1,57 @@
 import { useState, useEffect } from "react"
 import TodoInput from "./components/TodoInput"
 import TodoList from "./components/TodoList"
+import axios from "axios"
 
 function App() {
   const [todos, setTodos] = useState([])
   const [todoValue, setTodoValue] = useState('')
 
-  function persistData(newList) {
-    localStorage.setItem('todos', JSON.stringify({ todos: newList }))
-  }
+  // Fetch todos from backend
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/todos")
+      .then(res => setTodos(res.data))
+      .catch(err => console.error(err))
+  }, [])
 
   function handleAddTodos(newTodo) {
-    const newTodoList = [...todos, newTodo]
-    persistData(newTodoList)
-    setTodos(newTodoList)
+    axios.post("http://localhost:5000/api/todos", { title: newTodo })
+      .then(res => setTodos([...todos, res.data]))
+      .catch(err => console.error(err))
   }
 
   function handleDeleteTodo(index) {
-    const newTodoList = todos.filter((todo, todoIndex) => {
-      return todoIndex !== index
-    })
-    persistData(newTodoList)
-    setTodos(newTodoList)
+    const todo = todos[index]
+    axios.delete(`http://localhost:5000/api/todos/${todo.id}`)
+      .then(() => {
+        const newList = todos.filter((_, i) => i !== index)
+        setTodos(newList)
+      })
+      .catch(err => console.error(err))
   }
 
   function handleEditTodo(index) {
-    const valueToBeEdited = todos[index]
+    const valueToBeEdited = todos[index].title
     setTodoValue(valueToBeEdited)
     handleDeleteTodo(index)
   }
 
-  useEffect(() => {
-    if (!localStorage) {
-      return
-    }
-
-    let localTodos = localStorage.getItem('todos')
-    if (!localTodos) {
-      return
-    }
-
-    console.log(localTodos)
-    localTodos = JSON.parse(localTodos).todos
-    setTodos(localTodos)
-
-  }, [])
-
   return (
     <>
-    <h1>My Todo</h1>
-      <TodoInput todoValue={todoValue} setTodoValue={setTodoValue} handleAddTodos={handleAddTodos} />
-      <TodoList handleEditTodo={handleEditTodo} handleDeleteTodo={handleDeleteTodo} todos={todos} />
+      <h1>My Todo</h1>
+      <TodoInput
+        todoValue={todoValue}
+        setTodoValue={setTodoValue}
+        handleAddTodos={handleAddTodos}
+      />
+      <TodoList
+        handleEditTodo={handleEditTodo}
+        handleDeleteTodo={handleDeleteTodo}
+        todos={todos}
+      />
+
     </>
   )
 }
-
 
 export default App

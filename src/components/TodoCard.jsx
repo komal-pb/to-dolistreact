@@ -3,7 +3,7 @@ import React from 'react'
 export default function TodoCard({ children, handleDeleteTodo, index, handleEditTodo }){
     return (
         <li className='todoItem' >
-            {children}
+            {children} {/*displays actaul todo text*/}
             <div className='actionsContainer'>
                 <button onClick={() => {
                     handleEditTodo(index)
