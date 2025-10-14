@@ -79,9 +79,9 @@ Users can add, edit, delete, and track tasks, with data persisted in the browser
 - **POST `/api/todos`** – Add a new todo  
   ```json
   { "title": "Sample Task" }
-  
-  ---
-  
+  ```
+---
+
 ## Usage
 - Type a task in the input field and click **Add**.
 - The task appears below in a list
